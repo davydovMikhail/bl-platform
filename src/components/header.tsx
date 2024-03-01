@@ -3,6 +3,8 @@ import { useActions } from '../../src/storeHooks/useActions';
 import logo from '../img/logo.svg'
 import xDark from "../img/xDark.svg"
 import xLight from "../img/xLight.svg"
+import tgDark from "../img/tgDark.svg"
+import tgLight from "../img/tgLight.svg"
 import sun from "../img/sun.svg"
 import moon from "../img/moon.svg"
 
@@ -24,7 +26,7 @@ const Header = () => {
               Whitepaper
             </a>
             <a className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
-              <img src={night ? xDark : xLight} alt="" />
+              <img src={night ? tgDark : tgLight} alt="" />
             </a>
             <a className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
               <img src={night ? xDark : xLight} alt="" />
