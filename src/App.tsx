@@ -9,6 +9,10 @@ import Bubble from './components/bubble';
 import Tit from './components/tit';
 import markDark from '../src/img/markDark.svg'
 import markLight from '../src/img/markLight.svg'
+import bankPic from '../src/img/bankPic.svg'
+import speedPic from '../src/img/speedPic.svg'
+import okDark from '../src/img/okDark.svg'
+import okLight from '../src/img/okLight.svg'
 
  
 
@@ -51,9 +55,7 @@ function App() {
                 className={`referral__input ${ night ? "referral__input_dark" : "referral__input_light" }`} 
                 placeholder='Referral Address'  
               />
-              
               <Tit />
-              
               <div className="titinfo">
                 <div className={`titinfo__bal ${ night ? "titinfo__bal_dark" : "titinfo__bal_light" }`}>
                   <span className={`titinfo__baltext ${ night ? "titinfo__baltext_dark" : "titinfo__baltext_light" }`}>
@@ -76,7 +78,181 @@ function App() {
             <Bubble />
           </div>
         </div>
-        
+
+        <div className={`stats-wrapper ${ night ? "stats-wrapper_dark" : "stats-wrapper_light" }`}>
+          <div className="stats">
+            <div className="stat">
+              <img className="stat__pic" src={bankPic} alt="" />  
+              <div className="info">
+                <div className={`info__title ${ night ? "info__title_dark" : "info__title_light" }`}>
+                  Bank Stats
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Level
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Boost Price
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Bank Size
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <img className="stat__ok" src={night ? okDark : okLight} alt="ok" />
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      1
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      2
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      2
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className={`boost ${ night ? "boost_dark" : "boost_light" }`}>
+                  <button className="boost__button">
+                    Boost!
+                  </button>
+                  <div className={`boost__text ${ night ? "boost__text_dark" : "boost__text_light" }`}>
+                    +5000 to bank size
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="stat">
+              <img className="stat__pic" src={speedPic} alt="" />
+              <div className="info">
+                <div className={`info__title ${ night ? "info__title_dark" : "info__title_light" }`}>
+                  Recovery speed
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Level
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Boost Price
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
+                      Rec. Speed
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <img className="stat__ok" src={night ? okDark : okLight} alt="ok" />
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      1
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      2
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className="stat__line">
+                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      2
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
+                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
+                      10000
+                    </span>
+                  </div>
+                </div>
+                <div className={`boost ${ night ? "boost_dark" : "boost_light" }`}>
+                  <button className="boost__button">
+                    Boost!
+                  </button>
+                  <div className={`boost__text ${ night ? "boost__text_dark" : "boost__text_light" }`}>
+                    +1 token per second
+                  </div>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
       </main>
       <ToastContainer/>
     </>
