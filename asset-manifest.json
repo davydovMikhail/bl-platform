@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/bl-platform/static/css/main.ae94e84c.css",
-    "main.js": "/bl-platform/static/js/main.cccf9ffc.js",
+    "main.css": "/bl-platform/static/css/main.243940ac.css",
+    "main.js": "/bl-platform/static/js/main.13c93bc0.js",
     "static/media/bubble.gif": "/bl-platform/static/media/bubble.6818f76d2fc1f9f14518.gif",
     "static/media/logo.svg": "/bl-platform/static/media/logo.999c09f5e631bed986e83d0bcbbcaba9.svg",
     "static/media/leftblur.png": "/bl-platform/static/media/leftblur.ac54740264641857ebc2.png",
@@ -22,11 +22,11 @@
     "index.html": "/bl-platform/index.html",
     "static/media/tgDark.svg": "/bl-platform/static/media/tgDark.c9291281d42bec90733a9044292dff58.svg",
     "static/media/xDark.svg": "/bl-platform/static/media/xDark.cbde57630700d550295a4bc6ffc0273b.svg",
-    "main.ae94e84c.css.map": "/bl-platform/static/css/main.ae94e84c.css.map",
-    "main.cccf9ffc.js.map": "/bl-platform/static/js/main.cccf9ffc.js.map"
+    "main.243940ac.css.map": "/bl-platform/static/css/main.243940ac.css.map",
+    "main.13c93bc0.js.map": "/bl-platform/static/js/main.13c93bc0.js.map"
   },
   "entrypoints": [
-    "static/css/main.ae94e84c.css",
-    "static/js/main.cccf9ffc.js"
+    "static/css/main.243940ac.css",
+    "static/js/main.13c93bc0.js"
   ]
 }
