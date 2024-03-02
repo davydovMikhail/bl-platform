@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useTypedSelector } from './storeHooks/useTypedSelector';
 import { useActions } from './storeHooks/useActions';
 import Header from './components/header';
+import Footer from './components/footer';
 import Bubble from './components/bubble';
 import Tit from './components/tit';
 import markDark from '../src/img/markDark.svg'
@@ -253,6 +254,7 @@ function App() {
             </div>
           </div>
         </div>
+        <Footer />
       </main>
       <ToastContainer/>
     </>

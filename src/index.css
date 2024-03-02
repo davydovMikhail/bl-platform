@@ -248,6 +248,13 @@ body {
   padding: 12px 32px;
   border-radius: 35px;
 }
+.whitepaper1 {
+  font-family: "Cy Grotesk";
+  font-size: 18px;
+  line-height: 32px;
+  padding: 12px 32px;
+  border-radius: 35px;
+}
 .whitepaper__dark {
   color: var(--2, var(--white, #FFF));
   background: rgba(255, 255, 255, 0.15);
@@ -257,6 +264,15 @@ body {
   background: #F6ECD6;
 }
 .circle__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  margin-left: 8px;
+}
+.circle__link1 {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -855,5 +871,26 @@ body {
   }
   .stats {
     padding: 20px 10px 20px 10px;
+  }
+}
+.footer {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer__right {
+  display: flex;
+}
+.footer__left {
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 773px) {
+  .footer__left {
+    display: none;
+  }
+  .footer {
+    padding: 16px 8px 16px 8px;
   }
 }
