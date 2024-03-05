@@ -1,17 +1,18 @@
 import { provider } from "../utils/provider";
 import { useCallback } from "react"; 
-import { Contract } from "ethers"
+import { Contract } from "ethers";
 import GameAbi from '../abi/Game.json';
+import { formatEther } from '@ethersproject/units'
 const addressGame = process.env.REACT_APP_GAME_CONTRACT as string;
 const contractGame = new Contract(addressGame, GameAbi, provider);
 
-export const useGetCurrentBlockNumber = () => {
+export const useGetMandatoryBalance = () => {
 
     return useCallback(
-        async () => {  
+        async (account: string) => {  
             try {
-                const block = await contractGame.getCurrentBlockNumber();
-                return Number(block);
+                const balance = await contractGame.calculateMandatoryBalance(account);
+                return Number(formatEther(balance));
             } catch(error: any) {
                 const errorMessage =
                     error?.error?.message ||

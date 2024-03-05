@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useEthers } from "@usedapp/core";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -8,19 +9,284 @@ import Header from './components/header';
 import Footer from './components/footer';
 import Bubble from './components/bubble';
 import Tit from './components/tit';
+import Titinfo from './components/titinfo';
+import Bank from './components/bank';
+import Speed from './components/speed';
 import markDark from '../src/img/markDark.svg'
 import markLight from '../src/img/markLight.svg'
 import bankPic from '../src/img/bankPic.svg'
 import speedPic from '../src/img/speedPic.svg'
-import okDark from '../src/img/okDark.svg'
-import okLight from '../src/img/okLight.svg'
+import useSetInterval from "use-set-interval";
+import { useGetRewardAmount } from "./hooks/useGetRewardAmount";
+import { useGetReferral } from "./hooks/useGetReferral";
+import { useGetBalance } from "./hooks/useGetBalance";
+import { useGetMandatoryBalance } from "./hooks/useGetMandatoryBalance";
+import { useClaim } from "./hooks/useClaim";
+import { useGetAllowance } from "./hooks/useGetAllowance";
+import { useApproveToGame } from "./hooks/useApproveToGame";
+import { useGetBankLevel } from "./hooks/useGetBankLevel";
+import { useBoostEnergy } from "./hooks/useBoostEnergy";
+import { useGetRechargingLevel } from "./hooks/useGetRechargingLevel";
+import { useBoostRecharging } from "./hooks/useBoostRecharging";
+import copy from 'copy-to-clipboard';
 
  
 
 function App() {
-  const { night } = useTypedSelector(state => state.main);
-  const { } = useActions();
-  const { activateBrowserWallet, account } = useEthers();
+  const { night, rechargingLevel, bankLevel, balance, mustHave, loader } = useTypedSelector(state => state.main);
+  const { SetLoader, SetBalance, SetMusthave, SetBankLevel, SetRechargingLevel } = useActions();
+  const { account } = useEthers();
+
+  const [reward, setReward] = useState(0);
+  const [referral, setReferral] = useState("");
+  const [factReferral, setFactReferral] = useState("0x0000000000000000000000000000000000000000");
+
+  const rewardHook = useGetRewardAmount();
+  const referralHook = useGetReferral();
+  const getBalanceHook = useGetBalance();
+  const mandatoryHook = useGetMandatoryBalance();
+  const claimRewardHook = useClaim();
+  const allowanceHook = useGetAllowance();
+  const approveHook = useApproveToGame();
+  const bankHook = useGetBankLevel();
+  const boostBankHook = useBoostEnergy();
+  const rechargingHook = useGetRechargingLevel();
+  const boostRechargingHook = useBoostRecharging();
+
+  useEffect(() => {
+    const queryParameters = new URLSearchParams(window.location.search);
+    const ref = queryParameters.get("ref");  
+    if(ref) {
+      setReferral(ref);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const refer = await referralHook(account as string);
+        if(account) {
+          setFactReferral(refer);
+        }
+        const rewardAmount = await rewardHook(account as string);
+        if(account) {
+          setReward(rewardAmount as number);
+        }
+    }
+    fetchData().catch(console.error);
+  }, [account]);
+
+  function rechargingSpeed() {
+    return account ? (rechargingLevel + 1) : 1;
+  }
+
+  function bankSize() {
+    return account ? (bankLevel * 5000 + 10000) : 10000; 
+  }
+
+  function getWidth() {
+    const ratio = (reward / bankSize()) * 100; 
+    return ratio < 5 ? 5 : ratio;
+  }
+
+  useSetInterval(() => {
+    if(reward + rechargingSpeed() < bankSize()) {
+        setReward(reward + rechargingSpeed())
+    }
+  }, 1000)
+
+  function isValidETHAddress(address: string) {
+    if(address.length !== 42) {
+        return false;
+    }
+    let regex = new RegExp(/^(0x)?[0-9a-fA-F]{40}$/);
+    return regex.test(address); 
+  }
+
+  function boostPrice(level: number) {
+    let price = 1000 * (2**(level + 1));
+    return price;
+  }
+
+  async function takeaway() {
+    if (!account) {
+        toast.info('First connect your wallet', {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "colored",
+        });
+        return;
+    }
+    if (balance < mustHave) {
+        toast.info('The balance is less than the must have', {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "colored",
+        });
+        return;
+    }
+    SetLoader(true);
+    let address = referral.trim();
+    if(address === '') {
+        address = "0x0000000000000000000000000000000000000000"
+    } else {
+        const valid = isValidETHAddress(address);
+        if(!valid) {
+            toast.error('Invalid address', {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: true,
+                pauseOnHover: false,
+                draggable: true,
+                theme: "colored",
+            });
+            SetLoader(false);
+            return;
+        } else {
+            if(address.toLocaleUpperCase() === account.toLocaleUpperCase()) {
+                toast.info('You cannot specify your address as a referral', {
+                    position: "top-center",
+                    autoClose: 1000,
+                    hideProgressBar: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    theme: "colored",
+                });
+                SetLoader(false);
+                return;
+            }
+        }
+    }
+    console.log(address);
+    await claimRewardHook(address);
+    SetLoader(false);
+    const balanceAccount = await getBalanceHook(account as string);               
+    SetBalance(balanceAccount as number);
+    const mandatoryBal = await mandatoryHook(account as string);
+    SetMusthave(mandatoryBal as number);
+    const rewardAmount = await rewardHook(account as string);
+    setReward(rewardAmount as number);
+    const refer = await referralHook(account as string);
+    setFactReferral(refer);
+  }
+
+  function copyRef() {
+    if (!account) {
+      toast.info('First connect your wallet', {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          pauseOnHover: false,
+          draggable: true,
+          theme: "colored",
+      });
+      return;
+    }
+    copy(`https://platform.coinbubble.xyz?ref=${account}`);
+    toast.success('copied', {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      pauseOnHover: false,
+      draggable: true,
+      theme: "colored",
+  });
+  }
+
+  async function boostBank() {
+    if (!account) {
+        toast.info('First connect your wallet', {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
+        return;
+    }
+    if (balance < boostPrice(bankLevel)) {
+        toast.info('Not enough tokens', {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
+        return;
+    }
+    SetLoader(true);
+    if((await allowanceHook(account) as number) < boostPrice(bankLevel)) {
+        toast.info('Approve tokens', {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
+        await approveHook();
+    }
+    await boostBankHook();
+    SetLoader(false);
+    const balanceAccount = await getBalanceHook(account as string);   
+    SetBalance(balanceAccount as number);
+    const bankLvl = await bankHook(account as string);
+    SetBankLevel(bankLvl as number);
+    const rewardAmount = await rewardHook(account as string);
+    setReward(rewardAmount as number);
+  }
+
+  async function boostRecharging() {
+    if (!account) {
+        toast.info('First connect your wallet', {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
+        return;
+    }
+    if (balance < boostPrice(rechargingLevel)) {
+        toast.info('Not enough tokens', {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
+        return;
+    }
+    SetLoader(true);
+    if((await allowanceHook(account) as number) < boostPrice(rechargingLevel)) {
+        toast.info('Approve tokens', {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          pauseOnHover: false,
+          draggable: true,
+          theme: "dark",
+        });
+        await approveHook();
+    }
+    await boostRechargingHook();
+    SetLoader(false);
+    const balanceAccount = await getBalanceHook(account as string);   
+    SetBalance(balanceAccount as number);
+    const rechargingLvl = await rechargingHook(account as string);
+    SetRechargingLevel(rechargingLvl as number);
+    const rewardAmount = await rewardHook(account as string);
+    setReward(rewardAmount as number);
+  }
   
   return (
     <>
@@ -33,14 +299,18 @@ function App() {
                 YOU CAN TAKE AWAY
               </div>
               <div className="bubble__banksize">
-                <span className={`${ night ? "banksize__total_dark" : "banksize__total_light" }`}>3000 / </span><span className="banksize__total">15000</span> 
+                <span className={`${ night ? "banksize__total_dark" : "banksize__total_light" }`}> {reward} / </span><span className="banksize__total">{bankSize()}</span> 
               </div>
               <div className={`line ${ night ? "line_dark" : "line_light" }`}>
                 <div className="line__inner"
-                  style={{width: "50%"}}
+                  style={{width: `${getWidth()}%`}}
                 ></div>
               </div>
-              <button className="claim">
+              <button 
+                className="claim"
+                onClick={() => takeaway()}
+                disabled={loader}
+              >
                 Claim
               </button>
               <div className="title">
@@ -48,34 +318,37 @@ function App() {
                   <img src={night ? markDark : markLight} alt="mark" />
                 </div>
                 <div className={`title__text ${ night ? "title__text_dark" : "title__text_light" }`}>
-                  Referral Address (Optional):
+                  Referral Address{factReferral === "0x0000000000000000000000000000000000000000" ? " (Optional)" : ""}:
                 </div>
               </div>
-              <input 
-                type="text" 
-                className={`referral__input ${ night ? "referral__input_dark" : "referral__input_light" }`} 
-                placeholder='Referral Address'  
-              />
-              <Tit />
-              <div className="titinfo">
-                <div className={`titinfo__bal ${ night ? "titinfo__bal_dark" : "titinfo__bal_light" }`}>
-                  <span className={`titinfo__baltext ${ night ? "titinfo__baltext_dark" : "titinfo__baltext_light" }`}>
-                    108000 $BUBBLE
-                  </span>
-                </div>
-                <div className={`titinfo__bal ${ night ? "titinfo__bal_dark" : "titinfo__bal_light" }`}>
-                  <span className={`titinfo__baltext ${ night ? "titinfo__baltext_dark" : "titinfo__baltext_light" }`}>
-                    120000 $BUBBLE
-                  </span>
-                </div>
-                <div className={`titinfo__bal ${ night ? "titinfo__bal_dark" : "titinfo__bal_light" }`}>
-                  <span className={`titinfo__baltext ${ night ? "titinfo__baltext_dark" : "titinfo__baltext_light" }`}>
-                    0x12...3a5f
-                  </span>
-                </div>
-              </div>
-            </div>
 
+
+              { factReferral === "0x0000000000000000000000000000000000000000" &&
+                <input 
+                  type="text" 
+                  className={`referral__input ${ night ? "referral__input_dark" : "referral__input_light" }`} 
+                  placeholder='Referral Address'  
+                  value={referral || ''}
+                  onChange={(e) => setReferral(e.target.value)}
+                />
+              }
+              { factReferral !== "0x0000000000000000000000000000000000000000" &&
+                <div className={`referral__div ${ night ? "referral__div_dark" : "referral__div_light" }`}>
+                  <span className={`referral__text ${ night ? "referral__text_dark" : "referral__text_light" }`}>
+                    {factReferral}
+                  </span>
+                </div>
+              }
+              
+              <Tit />
+              <Titinfo />
+              <button 
+                className={`ref ${ night ? "ref_dark" : "ref_light" }`}
+                onClick={() => copyRef()}
+              >
+                Copy My Ref Link
+              </button>
+            </div>
             <Bubble />
           </div>
         </div>
@@ -85,80 +358,13 @@ function App() {
             <div className="stat">
               <img className="stat__pic" src={bankPic} alt="" />  
               <div className="info">
-                <div className={`info__title ${ night ? "info__title_dark" : "info__title_light" }`}>
-                  Bank Stats
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Level
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Boost Price
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Bank Size
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <img className="stat__ok" src={night ? okDark : okLight} alt="ok" />
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      1
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      2
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      2
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
+                <Bank />
                 <div className={`boost ${ night ? "boost_dark" : "boost_light" }`}>
-                  <button className="boost__button">
+                  <button 
+                    className="boost__button"
+                    disabled={loader}
+                    onClick={() => boostBank()}
+                  >
                     Boost!
                   </button>
                   <div className={`boost__text ${ night ? "boost__text_dark" : "boost__text_light" }`}>
@@ -170,80 +376,15 @@ function App() {
             <div className="stat">
               <img className="stat__pic" src={speedPic} alt="" />
               <div className="info">
-                <div className={`info__title ${ night ? "info__title_dark" : "info__title_light" }`}>
-                  Recovery speed
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Level
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Boost Price
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`tit__text ${ night ? "tit__text_dark" : "tit__text_light" }`}>
-                      Rec. Speed
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <img className="stat__ok" src={night ? okDark : okLight} alt="ok" />
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      1
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "active__dark" : "active__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      2
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
-                <div className="stat__line">
-                  <div className={`stat__level_none stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      2
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                  <div className={`stat__item ${ night ? "stat__item_dark" : "stat__item_light" }`}>
-                    <span className={`item__text ${ night ? "none__dark" : "none__light" }`}>
-                      10000
-                    </span>
-                  </div>
-                </div>
+                
+                <Speed />
+
                 <div className={`boost ${ night ? "boost_dark" : "boost_light" }`}>
-                  <button className="boost__button">
+                  <button 
+                    className="boost__button"
+                    disabled={loader}
+                    onClick={() => boostRecharging()}
+                  >
                     Boost!
                   </button>
                   <div className={`boost__text ${ night ? "boost__text_dark" : "boost__text_light" }`}>

@@ -1,5 +1,6 @@
 import { useTypedSelector } from '../../src/storeHooks/useTypedSelector';
 import { useActions } from '../../src/storeHooks/useActions';
+import { useEthers } from "@usedapp/core";
 import logo from '../img/logo.svg'
 import xDark from "../img/xDark.svg"
 import xLight from "../img/xLight.svg"
@@ -11,6 +12,7 @@ import moon from "../img/moon.svg"
 const Header = () => {
     const { night } = useTypedSelector(state => state.main);
     const { SetNight } = useActions();
+    const { activateBrowserWallet } = useEthers();
 
     const themeHandler = () => {
         SetNight(!night)
@@ -38,7 +40,9 @@ const Header = () => {
             </div>
           </div>
           <div className="header__right">
-            <button className="connect">
+            <button
+              onClick={() => activateBrowserWallet()}
+              className="connect">
               Connect Wallet
             </button>
           </div>
