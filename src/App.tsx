@@ -115,7 +115,7 @@ function App() {
             hideProgressBar: true,
             pauseOnHover: false,
             draggable: true,
-            theme: "colored",
+            theme: "dark",
         });
         return;
     }
@@ -126,7 +126,7 @@ function App() {
             hideProgressBar: true,
             pauseOnHover: false,
             draggable: true,
-            theme: "colored",
+            theme: "dark",
         });
         return;
     }
@@ -155,7 +155,7 @@ function App() {
                     hideProgressBar: true,
                     pauseOnHover: false,
                     draggable: true,
-                    theme: "colored",
+                    theme: "dark",
                 });
                 SetLoader(false);
                 return;
@@ -183,7 +183,7 @@ function App() {
           hideProgressBar: true,
           pauseOnHover: false,
           draggable: true,
-          theme: "colored",
+          theme: "dark",
       });
       return;
     }
@@ -201,7 +201,7 @@ function App() {
   async function boostBank() {
     if (!account) {
         toast.info('First connect your wallet', {
-            position: "bottom-center",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
@@ -212,7 +212,7 @@ function App() {
     }
     if (balance < boostPrice(bankLevel)) {
         toast.info('Not enough tokens', {
-            position: "bottom-center",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
@@ -224,7 +224,7 @@ function App() {
     SetLoader(true);
     if((await allowanceHook(account) as number) < boostPrice(bankLevel)) {
         toast.info('Approve tokens', {
-            position: "bottom-center",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
@@ -246,7 +246,7 @@ function App() {
   async function boostRecharging() {
     if (!account) {
         toast.info('First connect your wallet', {
-            position: "bottom-center",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
@@ -257,7 +257,7 @@ function App() {
     }
     if (balance < boostPrice(rechargingLevel)) {
         toast.info('Not enough tokens', {
-            position: "bottom-center",
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
@@ -269,7 +269,7 @@ function App() {
     SetLoader(true);
     if((await allowanceHook(account) as number) < boostPrice(rechargingLevel)) {
         toast.info('Approve tokens', {
-          position: "bottom-center",
+          position: "top-center",
           autoClose: 1000,
           hideProgressBar: true,
           pauseOnHover: false,

@@ -18,8 +18,8 @@ export const useApproveToGame = () => {
       try {
         const txPromise = await TokenContract.approve(addressGame, constants.MaxUint256);
         const tx = await txPromise.wait();
-        toast.success('APPROVED', {
-            position: "bottom-center",
+        toast.success('Approved', {
+            position: "top-center",
             autoClose: 1000,
             hideProgressBar: true,
             pauseOnHover: false,
