@@ -18,7 +18,7 @@ import bankPic from '../src/img/bankPic.svg'
 import speedPic from '../src/img/speedPic.svg'
 import useSetInterval from "use-set-interval";
 import { useGetRewardAmount } from "./hooks/useGetRewardAmount";
-import { useGetReferral } from "./hooks/useGetReferral";
+import { useGetReferrer } from "./hooks/useGetReferrer";
 import { useGetBalance } from "./hooks/useGetBalance";
 import { useGetMandatoryBalance } from "./hooks/useGetMandatoryBalance";
 import { useClaim } from "./hooks/useClaim";
@@ -38,11 +38,11 @@ function App() {
   const { account } = useEthers();
 
   const [reward, setReward] = useState(0);
-  const [referral, setReferral] = useState("");
-  const [factReferral, setFactReferral] = useState("0x0000000000000000000000000000000000000000");
+  const [referrer, setReferrer] = useState("");
+  const [factReferrer, setFactReferrer] = useState("0x0000000000000000000000000000000000000000");
 
   const rewardHook = useGetRewardAmount();
-  const referralHook = useGetReferral();
+  const referrerHook = useGetReferrer();
   const getBalanceHook = useGetBalance();
   const mandatoryHook = useGetMandatoryBalance();
   const claimRewardHook = useClaim();
@@ -57,15 +57,15 @@ function App() {
     const queryParameters = new URLSearchParams(window.location.search);
     const ref = queryParameters.get("ref");  
     if(ref) {
-      setReferral(ref);
+      setReferrer(ref);
     }
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-        const refer = await referralHook(account as string);
+        const refer = await referrerHook(account as string);
         if(account) {
-          setFactReferral(refer);
+          setFactReferrer(refer);
         }
         const rewardAmount = await rewardHook(account as string);
         if(account) {
@@ -131,7 +131,7 @@ function App() {
         return;
     }
     SetLoader(true);
-    let address = referral.trim();
+    let address = referrer.trim();
     if(address === '') {
         address = "0x0000000000000000000000000000000000000000"
     } else {
@@ -149,7 +149,7 @@ function App() {
             return;
         } else {
             if(address.toLocaleUpperCase() === account.toLocaleUpperCase()) {
-                toast.info('You cannot specify your address as a referral', {
+                toast.info('You cannot specify your address as a referrer', {
                     position: "top-center",
                     autoClose: 1000,
                     hideProgressBar: true,
@@ -171,8 +171,8 @@ function App() {
     SetMusthave(mandatoryBal as number);
     const rewardAmount = await rewardHook(account as string);
     setReward(rewardAmount as number);
-    const refer = await referralHook(account as string);
-    setFactReferral(refer);
+    const refer = await referrerHook(account as string);
+    setFactReferrer(refer);
   }
 
   function copyRef() {
@@ -318,24 +318,24 @@ function App() {
                   <img src={night ? markDark : markLight} alt="mark" />
                 </div>
                 <div className={`title__text ${ night ? "title__text_dark" : "title__text_light" }`}>
-                  Referral Address{factReferral === "0x0000000000000000000000000000000000000000" ? " (Optional)" : ""}:
+                  Referrer Address{factReferrer === "0x0000000000000000000000000000000000000000" ? " (Optional)" : ""}:
                 </div>
               </div>
 
 
-              { factReferral === "0x0000000000000000000000000000000000000000" &&
+              { factReferrer === "0x0000000000000000000000000000000000000000" &&
                 <input 
                   type="text" 
                   className={`referral__input ${ night ? "referral__input_dark" : "referral__input_light" }`} 
-                  placeholder='Referral Address'  
-                  value={referral || ''}
-                  onChange={(e) => setReferral(e.target.value)}
+                  placeholder='Referrer Address'  
+                  value={referrer || ''}
+                  onChange={(e) => setReferrer(e.target.value)}
                 />
               }
-              { factReferral !== "0x0000000000000000000000000000000000000000" &&
+              { factReferrer !== "0x0000000000000000000000000000000000000000" &&
                 <div className={`referral__div ${ night ? "referral__div_dark" : "referral__div_light" }`}>
                   <span className={`referral__text ${ night ? "referral__text_dark" : "referral__text_light" }`}>
-                    {factReferral}
+                    {factReferrer}
                   </span>
                 </div>
               }
