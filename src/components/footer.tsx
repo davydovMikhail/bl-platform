@@ -1,5 +1,5 @@
 import { useTypedSelector } from '../../src/storeHooks/useTypedSelector';
-import logo from '../img/logo.svg'
+import logo from '../img/logo.png'
 import xDark from "../img/xDark.svg"
 import xLight from "../img/xLight.svg"
 import tgDark from "../img/tgDark.svg"
