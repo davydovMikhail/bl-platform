@@ -24,13 +24,13 @@ const Header = () => {
           <div className="header__left">
             <img className="header__logo" src={logo} />
             <div className={`logo__text ${ night ? "logo__text_dark" : "logo__text_light" }`}>Bubble Coin</div>
-            <a className={`whitepaper ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`whitepaper ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://bubbledocs.gitbook.io/bubble/">
               Whitepaper
             </a>
-            <a className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://t.me/BubbleOnEth">
               <img src={night ? tgDark : tgLight} alt="" />
             </a>
-            <a className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`circle__link ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://twitter.com/BubbleOnETH">
               <img src={night ? xDark : xLight} alt="" />
             </a>
             <div onClick={() => themeHandler()} className={`theme__switch ${ night ? "theme__switch_dark" : "theme__switch_light" }`}>

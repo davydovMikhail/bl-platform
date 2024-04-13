@@ -6,10 +6,10 @@ const Tit = () => {
     return (
         <div className="titinfo">
             <div className={`titinfo__item ${ night ? "titinfo__item_dark" : "titinfo__item_light" }`}>
-                You Have  
+                Your Holdings  
             </div>
             <div className={`titinfo__item ${ night ? "titinfo__item_dark" : "titinfo__item_light" }`}>
-                Must Have 
+                Min requirement
             </div>
             <div className={`titinfo__item ${ night ? "titinfo__item_dark" : "titinfo__item_light" }`}>
                 Address

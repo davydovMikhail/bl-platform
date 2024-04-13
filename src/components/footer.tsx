@@ -15,13 +15,13 @@ const Footer = () => {
             <div className={`logo__text ${ night ? "logo__text_dark" : "logo__text_light" }`}>Bubble Coin</div>
           </div>
           <div className="footer__right">
-            <a className={`whitepaper1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`whitepaper1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://bubbledocs.gitbook.io/bubble/">
               Whitepaper
             </a>
-            <a className={`circle__link1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`circle__link1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://t.me/BubbleOnEth">
               <img src={night ? tgDark : tgLight} alt="" />
             </a>
-            <a className={`circle__link1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="http://google.com">
+            <a target='_blank' className={`circle__link1 ${ night ? "whitepaper__dark" : "whitepaper__light" }`} href="https://twitter.com/BubbleOnETH">
               <img src={night ? xDark : xLight} alt="" />
             </a>
           </div>

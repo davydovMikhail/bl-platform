@@ -296,7 +296,7 @@ function App() {
           <div className="bubble">
             <div className="bubble__left">
               <div className={`bubble__takeaway ${ night ? "bubble__takeaway_dark" : "bubble__takeaway_light" }`}>
-                YOU CAN TAKE AWAY
+                YOU CAN CLAIM
               </div>
               <div className="bubble__banksize">
                 <span className={`${ night ? "banksize__total_dark" : "banksize__total_light" }`}> {reward} / </span><span className="banksize__total">{bankSize()}</span> 

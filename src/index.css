@@ -483,6 +483,7 @@ body {
   margin-bottom: 64px;
 }
 .ref {
+  font-family: "Cy Grotesk";
   border-radius: 80px;
   border: 0;
   font-size: 24px;
@@ -605,9 +606,11 @@ body {
   margin-bottom: 8px;
 }
 .titinfo__item {
+  display: grid;
+	align-items: center;
   width: 32.58%;
   border-radius: 100px;
-  text-align: left;
+  text-align: center;
   padding: 12px 32px;
   font-size: 18px;
   font-style: normal;
